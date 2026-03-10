@@ -11,7 +11,7 @@ class Signals:
         u = diff.where(diff > 0, 0).rolling(14).mean()
         d = -diff.where(diff < 0, 0).rolling(14).mean()
         rsi = 100 - (100 / (1 + (u/d))).iloc[-1]
-    
+        
         conf = abs(rsi - 50) * 2 
         
         sig = "HOLD"
