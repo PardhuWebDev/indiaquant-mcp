@@ -1,5 +1,6 @@
 import sys
 import os
+from typing import Optional
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,8 +37,17 @@ def get_portfolio_pnl():
     return p.status(m)
 
 @mcp.tool()
-def place_virtual_trade(symbol: str, qty: int, price: float, side: str):
-    return p.add(symbol, qty, price, side)
+def place_virtual_trade(symbol: str, qty: int, side: str = "buy", price: Optional[float] = None):
+    """Places a virtual trade. If price is not provided, it fetches the live price."""
+    active_price = price
+    if active_price is None:
+        live_data = m.get_live(symbol)
+        if "price" in live_data:
+            active_price = live_data["price"]
+        else:
+            return f"Error: Could not fetch live price for {symbol}. Please provide a price manually."
+    
+    return p.add(symbol, qty, active_price, side)
 
 @mcp.tool()
 def calculate_greeks(S: float, K: float, days: int, vol: float):
