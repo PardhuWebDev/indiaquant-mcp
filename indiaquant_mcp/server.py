@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from mcp.server.fastmcp import FastMCP
@@ -32,7 +33,6 @@ def generate_signal(symbol: str):
 
 @mcp.tool()
 def get_portfolio_pnl():
-    # Helper to get live prices for all stocks in DB
     return p.status(m)
 
 @mcp.tool()
