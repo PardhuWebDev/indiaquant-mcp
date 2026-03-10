@@ -1,6 +1,5 @@
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from mcp.server.fastmcp import FastMCP
@@ -10,31 +9,51 @@ from core.signals import Signals
 from core.portfolio import Portfolio
 
 mcp = FastMCP("indiaquant")
-m_logic = Market()
-q_logic = Quant()
-s_logic = Signals()
-p_logic = Portfolio()
+m = Market()
+q = Quant()
+s = Signals()
+p = Portfolio()
 
 @mcp.tool()
-def get_price(symbol: str):
-    return m_logic.get_live(symbol)
+def get_live_price(symbol: str):
+    return m.get_live(symbol)
 
 @mcp.tool()
-def calculate_greeks(price: float, strike: float, days: int, vol: float):
-    return q_logic.get_greeks(price, strike, days, vol, 0.07)
+def get_options_chain(symbol: str):
+    return m.get_options(symbol)
 
 @mcp.tool()
-def check_trend(symbol: str):
-    return s_logic.check_rsi(symbol)
+def analyze_sentiment(symbol: str):
+    return s.get_sentiment(symbol)
 
 @mcp.tool()
-def place_order(symbol: str, qty: int, price: float, side: str):
-    return p_logic.place_trade(symbol, qty, price, side)
+def generate_signal(symbol: str):
+    return s.get_signal(symbol)
 
 @mcp.tool()
-def show_portfolio():
-    data = m_logic.get_live("RELIANCE.NS")
-    return p_logic.get_portfolio_status({"RELIANCE.NS": data['price']})
+def get_portfolio_pnl():
+    # Helper to get live prices for all stocks in DB
+    return p.status(m)
+
+@mcp.tool()
+def place_virtual_trade(symbol: str, qty: int, price: float, side: str):
+    return p.add(symbol, qty, price, side)
+
+@mcp.tool()
+def calculate_greeks(S: float, K: float, days: int, vol: float):
+    return q.calculate(S, K, days, vol, 0.07)
+
+@mcp.tool()
+def detect_unusual_activity(symbol: str):
+    return m.unusual_oi(symbol)
+
+@mcp.tool()
+def scan_market():
+    return s.scanner()
+
+@mcp.tool()
+def get_sector_heatmap():
+    return m.sectors()
 
 if __name__ == "__main__":
     mcp.run()
