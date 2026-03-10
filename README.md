@@ -1,28 +1,54 @@
-# IndiaQuant MCP
-**Developer:** Pardhu
+IndiaQuant MCP
+Developer: Pardha Saradhi CH
 
-### Overview
-This is a Model Context Protocol (MCP) server built to connect Claude with the Indian Stock Market (NSE). It allows the AI to fetch live prices, calculate option greeks, and track a virtual portfolio using local Python logic.
+This is a Model Context Protocol (MCP) server that provides Claude with real-time access to the Indian Stock Market (NSE). The server integrates live data fetching, quantitative analysis, and a persistent virtual trading environment.
 
-### Key Tools
-- **Price Checker**: Fetches live NSE stock prices using yfinance.
-- **Trend Analysis**: Uses RSI (14-period) to identify Overbought or Oversold stocks.
-- **Quant Engine**: Implements the Black-Scholes model for Delta, Gamma, Theta, and Vega.
-- **Portfolio Tracker**: Uses SQLite to save trades and calculate live P&L.
+Project Capabilities
+The server implements 10 specific tools designed for market analysis and trading:
 
-### Project Structure
-- `server.py`: The main entry point that registers tools for the AI.
-- `core/`: 
-    - `market.py`: Logic for API data fetching.
-    - `quant.py`: Mathematical formulas for options.
-    - `signals.py`: Technical analysis indicators.
-    - `portfolio.py`: Database management for trades.
+get_live_price: Real-time NSE data fetching.
 
-### Setup & Installation
-1. Install the required libraries:
-   `pip install mcp yfinance pandas numpy scipy`
+get_options_chain: Retrieval of latest calls and puts data.
 
-2. Configure Claude Desktop:
-   Add the absolute path of `server.py` and your `python.exe` to the Claude `config.json` file.
+analyze_sentiment: Volume-based sentiment analysis.
 
-3. Restart Claude and start asking about NSE stocks!
+generate_signal: 14-period RSI technical analysis.
+
+get_portfolio_pnl: Real-time P&L tracking for virtual holdings.
+
+place_virtual_trade: Execution of trades via local SQLite storage.
+
+calculate_greeks: Manual Black-Scholes implementation for Delta, Gamma, Theta, and Vega.
+
+detect_unusual_activity: Monitoring for Volume vs. Open Interest anomalies.
+
+scan_market: Technical screening across the Nifty 50.
+
+get_sector_heatmap: Comparative performance analysis of sectoral indices.
+
+Technical Architecture
+Mathematical Implementation: Greeks are calculated from scratch using numpy and scipy to demonstrate quantitative reasoning without external libraries.
+
+Modular Design: The project is strictly decoupled into specific modules (market, quant, signals, and portfolio) to ensure maintainability and testability.
+
+Data Persistence: A local SQLite database manages the virtual portfolio, ensuring state is preserved across server restarts.
+
+Infrastructure: Built 100% on free, public APIs to ensure the project remains portable and accessible.
+
+Project Structure
+server.py: Entry point for MCP tool registration.
+
+core/market.py: Data ingestion logic.
+
+core/quant.py: Quantitative pricing models.
+
+core/signals.py: Technical indicators and market scanning.
+
+core/portfolio.py: Database management and P&L calculation.
+
+Setup
+Install dependencies: pip install mcp yfinance pandas numpy scipy
+
+Update the Claude Desktop configuration to point to the local Python environment and server.py.
+
+Restart Claude Desktop to initialize the tools.
